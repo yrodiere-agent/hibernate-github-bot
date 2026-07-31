@@ -69,7 +69,8 @@ public class CheckPullRequestContributionRules {
 			@ConfigFile("hibernate-github-bot.yml") RepositoryConfig repositoryConfig,
 			@ConfigFile("PULL_REQUEST_TEMPLATE.md") String pullRequestTemplate,
 			GitHub gitHub) throws IOException {
-		for ( GHPullRequest pullRequest : payload.getCheckRun().getPullRequests() ) {
+		for ( GHPullRequest pullRequest : associatedPullRequests( payload.getRepository(),
+				payload.getCheckRun().getPullRequests(), payload.getCheckRun().getHeadSha() ) ) {
 			checkPullRequestContributionRules( payload.getRepository(), gitHub, repositoryConfig, pullRequestTemplate, pullRequest );
 		}
 	}
@@ -78,9 +79,24 @@ public class CheckPullRequestContributionRules {
 			@ConfigFile("hibernate-github-bot.yml") RepositoryConfig repositoryConfig,
 			@ConfigFile("PULL_REQUEST_TEMPLATE.md") String pullRequestTemplate,
 			GitHub gitHub) throws IOException {
-		for ( GHPullRequest pullRequest : payload.getCheckSuite().getPullRequests() ) {
+		for ( GHPullRequest pullRequest : associatedPullRequests( payload.getRepository(),
+				payload.getCheckSuite().getPullRequests(), payload.getCheckSuite().getHeadSha() ) ) {
 			checkPullRequestContributionRules( payload.getRepository(), gitHub, repositoryConfig, pullRequestTemplate, pullRequest );
 		}
+	}
+
+	private List<GHPullRequest> associatedPullRequests(GHRepository repository,
+			List<GHPullRequest> pullRequests, String headSha) throws IOException {
+		if ( !pullRequests.isEmpty() ) {
+			return pullRequests;
+		}
+		// The pull_requests list in check_run/check_suite webhook payloads can be empty
+		// for app-created check runs. Fall back to looking up PRs by commit SHA.
+		var commit = repository.getCommit( headSha );
+		if ( commit == null ) {
+			return List.of();
+		}
+		return commit.listPullRequests().toList();
 	}
 
 	private void checkPullRequestContributionRules(GHRepository repository, GitHub gitHub, RepositoryConfig repositoryConfig,

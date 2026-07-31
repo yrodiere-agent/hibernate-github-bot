@@ -4,6 +4,7 @@ import static io.quarkiverse.githubapp.testing.GitHubAppTesting.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -206,6 +207,97 @@ public class ExtractDevelocityBuildScansTest {
 					String query = queryCaptor.getValue().getQuery();
 					assertThat( query )
 							.contains( "value:\"Git commit id=" + WORKFLOW_HEAD_SHA + "\"" );
+				} );
+	}
+
+	@Test
+	void checkSuiteRerequested() throws IOException {
+		given()
+				.github( mocks -> {
+					mocks.configFile( "hibernate-github-bot.yml" )
+							.fromString( DEVELOCITY_BUILD_SCAN_CONFIG );
+
+					GHRepository repoMock = mocks.repository( REPO_NAME );
+
+					mockGetCheckRuns( repoMock, HEAD_SHA,
+							mockGitHubActionsCheckRun( HEAD_SHA ) );
+					mockDevelocityCheckRun( repoMock, HEAD_SHA );
+				} )
+				.when()
+				.payloadFromString( """
+						{
+						  "action": "rerequested",
+						  "check_suite": {
+						    "id": 73312401811,
+						    "head_sha": "%s",
+						    "head_branch": "some-branch",
+						    "status": "queued",
+						    "conclusion": null,
+						    "pull_requests": []
+						  },
+						  "repository": {
+						    "id": 961036,
+						    "name": "hibernate-orm",
+						    "full_name": "%s",
+						    "private": false,
+						    "owner": {
+						      "login": "hibernate",
+						      "id": 348262
+						    }
+						  },
+						  "installation": {
+						    "id": 15390286
+						  }
+						}
+						""".formatted( HEAD_SHA, REPO_NAME ) )
+				.event( GHEvent.CHECK_SUITE )
+				.then()
+				.github( mocks -> {
+					GHRepository repoMock = mocks.repository( REPO_NAME );
+					verify( repoMock ).createCheckRun( "Develocity Build Scans", HEAD_SHA );
+					verify( repoMock ).updateCheckRun( DEVELOCITY_CHECK_RUN_ID );
+					verify( develocityBuildsApiMock ).getBuilds( any() );
+				} );
+	}
+
+	@Test
+	void checkSuiteRerequested_noConfig() throws IOException {
+		given()
+				.github( mocks -> {
+				} )
+				.when()
+				.payloadFromString( """
+						{
+						  "action": "rerequested",
+						  "check_suite": {
+						    "id": 73312401811,
+						    "head_sha": "%s",
+						    "head_branch": "some-branch",
+						    "status": "queued",
+						    "conclusion": null,
+						    "pull_requests": []
+						  },
+						  "repository": {
+						    "id": 961036,
+						    "name": "hibernate-orm",
+						    "full_name": "%s",
+						    "private": false,
+						    "owner": {
+						      "login": "hibernate",
+						      "id": 348262
+						    }
+						  },
+						  "installation": {
+						    "id": 15390286
+						  }
+						}
+						""".formatted( HEAD_SHA, REPO_NAME ) )
+				.event( GHEvent.CHECK_SUITE )
+				.then()
+				.github( mocks -> {
+					GHRepository repoMock = mocks.repository( REPO_NAME );
+					verify( repoMock, never() ).createCheckRun( "Develocity Build Scans", HEAD_SHA );
+					verifyNoMoreInteractions( develocityBuildsApiMock );
 				} );
 	}
 
