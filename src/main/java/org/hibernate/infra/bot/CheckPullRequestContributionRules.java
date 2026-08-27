@@ -157,9 +157,9 @@ public class CheckPullRequestContributionRules {
 	}
 
 	private List<PullRequestCheck> createChecks(RepositoryConfig repositoryConfig, String pullRequestTemplate) {
-		List<PullRequestCheck> checks = new ArrayList<>();
-		checks.add( new TitleCheck() );
-		checks.add( new MergeCommitsCheck() );
+		List<PullRequestCheck> delegates = new ArrayList<>();
+		delegates.add( new TitleCheck() );
+		delegates.add( new MergeCommitsCheck() );
 
 		if ( repositoryConfig != null && repositoryConfig.jira != null ) {
 			final Integer issueLinksLimit = repositoryConfig.jira.getInsertLinksInPullRequests().isPresent()
@@ -167,7 +167,7 @@ public class CheckPullRequestContributionRules {
 					? repositoryConfig.jira.getIssueLinksLimit()
 					: null;
 			repositoryConfig.jira.getIssueKeyPattern()
-					.ifPresent( issueKeyPattern -> checks.add(
+					.ifPresent( issueKeyPattern -> delegates.add(
 							new JiraIssuesCheck(
 									issueKeyPattern, issueLinksLimit, repositoryConfig.jira.getIgnore(),
 									repositoryConfig.jira.getIgnoreFiles()
@@ -179,7 +179,7 @@ public class CheckPullRequestContributionRules {
 				&& repositoryConfig.licenseAgreement.getEnabled().orElse( Boolean.FALSE ) ) {
 			Matcher matcher = repositoryConfig.licenseAgreement.getPullRequestTemplatePattern().matcher( pullRequestTemplate );
 			if ( matcher.matches() && matcher.groupCount() == 1 ) {
-				checks.add( new LicenseCheck( matcher.group( 1 ).trim(), repositoryConfig.licenseAgreement.getIgnore() ) );
+				delegates.add( new LicenseCheck( matcher.group( 1 ).trim(), repositoryConfig.licenseAgreement.getIgnore() ) );
 			}
 			else {
 				throw new IllegalArgumentException( "Misconfigured license agreement check. Pattern should contain exactly 1 match group. Pattern: %s. Fetched Pull Request template: %s".formatted( repositoryConfig.licenseAgreement.getPullRequestTemplatePattern(), pullRequestTemplate ) );
@@ -188,10 +188,34 @@ public class CheckPullRequestContributionRules {
 
 		if ( repositoryConfig != null && repositoryConfig.pullRequestTasks != null
 				&& repositoryConfig.pullRequestTasks.getEnabled().orElse( Boolean.FALSE ) ) {
-			checks.add( new TasksCompletedCheck(repositoryConfig.pullRequestTasks.getIgnore() ) );
+			delegates.add( new TasksCompletedCheck(repositoryConfig.pullRequestTasks.getIgnore() ) );
 		}
 
-		return checks;
+		return List.of( new ContributionRulesCheck( delegates ) );
+	}
+
+	static class ContributionRulesCheck extends PullRequestCheck {
+		private final List<PullRequestCheck> delegates;
+
+		ContributionRulesCheck(List<PullRequestCheck> delegates) {
+			super( "Contribution rules" );
+			this.delegates = delegates;
+		}
+
+		@Override
+		public void perform(PullRequestCheckRunContext context, PullRequestCheckRunOutput output) throws IOException {
+			for ( PullRequestCheck delegate : delegates ) {
+				try {
+					delegate.perform( context, output );
+				}
+				catch (Exception e) {
+					LOG.error( "Pull request #" + context.pullRequest.getNumber()
+							+ " - check '" + delegate.name + "' failed", e );
+					output.rule( delegate.name )
+							.failed( "Failed with exception " + e.getClass().getName() + ": " + e.getMessage() );
+				}
+			}
+		}
 	}
 
 	static class TitleCheck extends PullRequestCheck {

@@ -53,10 +53,10 @@ public class CheckPullRequestContributionRulesMergeCommitsTest extends AbstractP
 				.event( GHEvent.PULL_REQUEST )
 				.then()
 				.github( mocks -> {
-					verify( mergeCommitsCheckRunUpdateBuilderMock ).withConclusion( GHCheckRun.Conclusion.SUCCESS );
+					verify( contributionRulesCheckRunUpdateBuilderMock ).withConclusion( GHCheckRun.Conclusion.SUCCESS );
 
 					var outputCaptor = ArgumentCaptor.forClass( GHCheckRunBuilder.Output.class );
-					verify( mergeCommitsCheckRunUpdateBuilderMock ).add( outputCaptor.capture() );
+					verify( contributionRulesCheckRunUpdateBuilderMock ).add( outputCaptor.capture() );
 					var output = outputCaptor.getValue();
 					assertThat( output )
 							.extracting( "title", InstanceOfAssertFactories.STRING )
@@ -95,10 +95,10 @@ public class CheckPullRequestContributionRulesMergeCommitsTest extends AbstractP
 				.event( GHEvent.PULL_REQUEST )
 				.then()
 				.github( mocks -> {
-					verify( mergeCommitsCheckRunUpdateBuilderMock ).withConclusion( GHCheckRun.Conclusion.FAILURE );
+					verify( contributionRulesCheckRunUpdateBuilderMock ).withConclusion( GHCheckRun.Conclusion.FAILURE );
 
 					var outputCaptor = ArgumentCaptor.forClass( GHCheckRunBuilder.Output.class );
-					verify( mergeCommitsCheckRunUpdateBuilderMock ).add( outputCaptor.capture() );
+					verify( contributionRulesCheckRunUpdateBuilderMock ).add( outputCaptor.capture() );
 					var output = outputCaptor.getValue();
 					assertThat( output )
 							.extracting( "title", InstanceOfAssertFactories.STRING )

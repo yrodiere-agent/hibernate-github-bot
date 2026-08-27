@@ -246,18 +246,21 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 				.event( GHEvent.PULL_REQUEST, true )
 				.then()
 				.github( mocks -> {
-					verify( mergeCommitsCheckRunUpdateBuilderMock ).withConclusion( GHCheckRun.Conclusion.FAILURE );
-					verify( jiraCheckRunUpdateBuilderMock ).withConclusion( GHCheckRun.Conclusion.FAILURE );
+					verify( contributionRulesCheckRunUpdateBuilderMock ).withConclusion( GHCheckRun.Conclusion.FAILURE );
 
 					var outputCaptor = ArgumentCaptor.forClass( GHCheckRunBuilder.Output.class );
-					verify( jiraCheckRunUpdateBuilderMock ).add( outputCaptor.capture() );
+					verify( contributionRulesCheckRunUpdateBuilderMock ).add( outputCaptor.capture() );
 					var output = outputCaptor.getValue();
 					assertThat( output )
 							.extracting( "title", InstanceOfAssertFactories.STRING )
-							.contains( "Contribution — JIRA issues", "failed with exception" );
+							.isEqualTo( "2 rules failed" );
 					assertThat( output )
 							.extracting( "summary", InstanceOfAssertFactories.STRING )
-							.contains( "java.lang.IllegalStateException: Simulated failure" );
+							.contains(
+									"Contribution — Merge commits",
+									"Contribution — JIRA issues",
+									"java.lang.IllegalStateException: Simulated failure"
+							);
 
 					GHPullRequest prMock = mocks.pullRequest( prId );
 					ArgumentCaptor<String> messageCaptor = ArgumentCaptor.forClass( String.class );
@@ -310,17 +313,17 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 				.event( GHEvent.PULL_REQUEST )
 				.then()
 				.github( mocks -> {
-					verify( jiraCheckRunUpdateBuilderMock ).withConclusion( GHCheckRun.Conclusion.SUCCESS );
+					verify( contributionRulesCheckRunUpdateBuilderMock ).withConclusion( GHCheckRun.Conclusion.SUCCESS );
 
 					var outputCaptor = ArgumentCaptor.forClass( GHCheckRunBuilder.Output.class );
-					verify( jiraCheckRunUpdateBuilderMock ).add( outputCaptor.capture() );
+					verify( contributionRulesCheckRunUpdateBuilderMock ).add( outputCaptor.capture() );
 					var output = outputCaptor.getValue();
 					assertThat( output )
 							.extracting( "title", InstanceOfAssertFactories.STRING )
 							.contains( "All rules passed" );
 					assertThat( output )
 							.extracting( "summary", InstanceOfAssertFactories.STRING )
-							.isBlank();
+							.doesNotContain( "❌" );
 
 					var pullRequest = mocks.pullRequest( prId );
 					// no new comments are added
@@ -363,10 +366,10 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 				.event( GHEvent.PULL_REQUEST )
 				.then()
 				.github( mocks -> {
-					verify( jiraCheckRunUpdateBuilderMock ).withConclusion( GHCheckRun.Conclusion.FAILURE );
+					verify( contributionRulesCheckRunUpdateBuilderMock ).withConclusion( GHCheckRun.Conclusion.FAILURE );
 
 					var outputCaptor = ArgumentCaptor.forClass( GHCheckRunBuilder.Output.class );
-					verify( jiraCheckRunUpdateBuilderMock ).add( outputCaptor.capture() );
+					verify( contributionRulesCheckRunUpdateBuilderMock ).add( outputCaptor.capture() );
 					var output = outputCaptor.getValue();
 					assertThat( output )
 							.extracting( "title", InstanceOfAssertFactories.STRING )
@@ -437,7 +440,7 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 				.event( GHEvent.PULL_REQUEST )
 				.then()
 				.github( mocks -> {
-					verify( jiraCheckRunUpdateBuilderMock ).withConclusion( GHCheckRun.Conclusion.SUCCESS );
+					verify( contributionRulesCheckRunUpdateBuilderMock ).withConclusion( GHCheckRun.Conclusion.SUCCESS );
 
 					var pullRequest = mocks.pullRequest( prId );
 					// no new comments are added

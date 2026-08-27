@@ -4,7 +4,6 @@ import static io.quarkiverse.githubapp.testing.GitHubAppTesting.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -27,8 +26,6 @@ import io.quarkiverse.githubapp.testing.GitHubAppTest;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-import org.kohsuke.github.GHCheckRun;
-import org.kohsuke.github.GHCheckRunBuilder;
 import org.kohsuke.github.GHEvent;
 import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHRepository;
@@ -43,20 +40,6 @@ public class CheckPullRequestContributionRulesTasksTest extends AbstractPullRequ
 	@InjectMock
 	@RestClient
 	JiraRestClient mock;
-
-	final GHCheckRunBuilder taskCheckRunCreateBuilderMock = mockCheckRunBuilder();
-	final GHCheckRunBuilder taskCheckRunUpdateBuilderMock = mockCheckRunBuilder();
-
-	@Override
-	void mockCheckRuns(GHRepository repoMock, String headSHA) throws IOException {
-		super.mockCheckRuns( repoMock, headSHA );
-		GHCheckRun taskCheckRunMock = mock( GHCheckRun.class );
-		mockCreateCheckRun( repoMock, "Contribution — Review tasks", headSHA,
-				taskCheckRunCreateBuilderMock, taskCheckRunMock, 45L
-		);
-		mockUpdateCheckRun( repoMock, 45L, taskCheckRunUpdateBuilderMock, taskCheckRunMock );
-	}
-
 
 	@BeforeEach
 	public void setUp() {
