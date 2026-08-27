@@ -12,36 +12,19 @@ import org.kohsuke.github.GHRepository;
 import org.mockito.Answers;
 
 abstract class AbstractPullRequestTest {
-	final GHCheckRunBuilder titleCheckRunCreateBuilderMock = mockCheckRunBuilder();
-	final GHCheckRunBuilder titleCheckRunUpdateBuilderMock = mockCheckRunBuilder();
-	final GHCheckRunBuilder mergeCommitsCheckRunCreateBuilderMock = mockCheckRunBuilder();
-	final GHCheckRunBuilder mergeCommitsCheckRunUpdateBuilderMock = mockCheckRunBuilder();
-	final GHCheckRunBuilder jiraCheckRunCreateBuilderMock = mockCheckRunBuilder();
-	final GHCheckRunBuilder jiraCheckRunUpdateBuilderMock = mockCheckRunBuilder();
+	final GHCheckRunBuilder contributionRulesCheckRunCreateBuilderMock = mockCheckRunBuilder();
+	final GHCheckRunBuilder contributionRulesCheckRunUpdateBuilderMock = mockCheckRunBuilder();
 
 	GHCheckRunBuilder mockCheckRunBuilder() {
 		return mock( GHCheckRunBuilder.class, withSettings().defaultAnswer( Answers.RETURNS_SELF ) );
 	}
 
 	void mockCheckRuns(GHRepository repoMock, String headSHA) throws IOException {
-		GHCheckRun titleCheckRunMock = mock( GHCheckRun.class );
-		mockCreateCheckRun( repoMock, "Contribution — Title", headSHA,
-				titleCheckRunCreateBuilderMock, titleCheckRunMock, 42L
+		GHCheckRun contributionRulesCheckRunMock = mock( GHCheckRun.class );
+		mockCreateCheckRun( repoMock, "Contribution rules", headSHA,
+				contributionRulesCheckRunCreateBuilderMock, contributionRulesCheckRunMock, 42L
 		);
-		mockUpdateCheckRun( repoMock, 42L, titleCheckRunUpdateBuilderMock, titleCheckRunMock );
-
-		GHCheckRun mergeCommitsCheckRunMock = mock( GHCheckRun.class );
-		mockCreateCheckRun( repoMock, "Contribution — Merge commits", headSHA,
-				mergeCommitsCheckRunCreateBuilderMock, mergeCommitsCheckRunMock, 46L
-		);
-		mockUpdateCheckRun( repoMock, 46L, mergeCommitsCheckRunUpdateBuilderMock, mergeCommitsCheckRunMock );
-
-		GHCheckRun jiraCheckRunMock = mock( GHCheckRun.class );
-		mockCreateCheckRun( repoMock, "Contribution — JIRA issues", headSHA,
-				jiraCheckRunCreateBuilderMock, jiraCheckRunMock, 43L
-		);
-		mockUpdateCheckRun( repoMock, 43L, jiraCheckRunUpdateBuilderMock, jiraCheckRunMock );
-
+		mockUpdateCheckRun( repoMock, 42L, contributionRulesCheckRunUpdateBuilderMock, contributionRulesCheckRunMock );
 	}
 
 	void mockCreateCheckRun(GHRepository repoMock, String name, String headSHA,

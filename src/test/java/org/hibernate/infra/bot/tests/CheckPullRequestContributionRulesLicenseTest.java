@@ -17,8 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import io.quarkiverse.githubapp.testing.GitHubAppTest;
 import io.quarkus.test.junit.QuarkusTest;
-import org.kohsuke.github.GHCheckRun;
-import org.kohsuke.github.GHCheckRunBuilder;
 import org.kohsuke.github.GHEvent;
 import org.kohsuke.github.GHOrganization;
 import org.kohsuke.github.GHPullRequest;
@@ -35,19 +33,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @GitHubAppTest
 @ExtendWith(MockitoExtension.class)
 public class CheckPullRequestContributionRulesLicenseTest extends AbstractPullRequestTest {
-
-	final GHCheckRunBuilder licenseCheckRunCreateBuilderMock = mockCheckRunBuilder();
-	final GHCheckRunBuilder licenseCheckRunUpdateBuilderMock = mockCheckRunBuilder();
-
-	@Override
-	void mockCheckRuns(GHRepository repoMock, String headSHA) throws IOException {
-		super.mockCheckRuns( repoMock, headSHA );
-		GHCheckRun licenseCheckRunMock = mock( GHCheckRun.class );
-		mockCreateCheckRun( repoMock, "Contribution — License agreement", headSHA,
-				licenseCheckRunCreateBuilderMock, licenseCheckRunMock, 44L
-		);
-		mockUpdateCheckRun( repoMock, 44L, licenseCheckRunUpdateBuilderMock, licenseCheckRunMock );
-	}
 
 	@Test
 	void bodyMissingLicenseAgreement() throws IOException {

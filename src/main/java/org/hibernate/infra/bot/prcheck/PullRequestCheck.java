@@ -9,7 +9,7 @@ public abstract class PullRequestCheck {
 		return run.perform();
 	}
 
-	final String name;
+	public final String name;
 
 	protected PullRequestCheck(String name) {
 		this.name = name;

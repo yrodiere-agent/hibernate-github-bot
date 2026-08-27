@@ -53,10 +53,10 @@ public class CheckPullRequestContributionRulesFixupSquashTest extends AbstractPu
 				.event( GHEvent.PULL_REQUEST )
 				.then()
 				.github( mocks -> {
-					verify( mergeCommitsCheckRunUpdateBuilderMock ).withConclusion( GHCheckRun.Conclusion.SUCCESS );
+					verify( contributionRulesCheckRunUpdateBuilderMock ).withConclusion( GHCheckRun.Conclusion.SUCCESS );
 
 					var outputCaptor = ArgumentCaptor.forClass( GHCheckRunBuilder.Output.class );
-					verify( mergeCommitsCheckRunUpdateBuilderMock ).add( outputCaptor.capture() );
+					verify( contributionRulesCheckRunUpdateBuilderMock ).add( outputCaptor.capture() );
 					var output = outputCaptor.getValue();
 					assertThat( output )
 							.extracting( "title", InstanceOfAssertFactories.STRING )
@@ -94,14 +94,14 @@ public class CheckPullRequestContributionRulesFixupSquashTest extends AbstractPu
 				.event( GHEvent.PULL_REQUEST )
 				.then()
 				.github( mocks -> {
-					verify( mergeCommitsCheckRunUpdateBuilderMock ).withConclusion( GHCheckRun.Conclusion.FAILURE );
+					verify( contributionRulesCheckRunUpdateBuilderMock ).withConclusion( GHCheckRun.Conclusion.FAILURE );
 
 					var outputCaptor = ArgumentCaptor.forClass( GHCheckRunBuilder.Output.class );
-					verify( mergeCommitsCheckRunUpdateBuilderMock ).add( outputCaptor.capture() );
+					verify( contributionRulesCheckRunUpdateBuilderMock ).add( outputCaptor.capture() );
 					var output = outputCaptor.getValue();
 					assertThat( output )
 							.extracting( "title", InstanceOfAssertFactories.STRING )
-							.isEqualTo( "The pull request should not contain fixup! or squash! commits" );
+							.contains( "rules failed" );
 					assertThat( output )
 							.extracting( "summary", InstanceOfAssertFactories.STRING )
 							.contains(
@@ -153,14 +153,14 @@ public class CheckPullRequestContributionRulesFixupSquashTest extends AbstractPu
 				.event( GHEvent.PULL_REQUEST )
 				.then()
 				.github( mocks -> {
-					verify( mergeCommitsCheckRunUpdateBuilderMock ).withConclusion( GHCheckRun.Conclusion.FAILURE );
+					verify( contributionRulesCheckRunUpdateBuilderMock ).withConclusion( GHCheckRun.Conclusion.FAILURE );
 
 					var outputCaptor = ArgumentCaptor.forClass( GHCheckRunBuilder.Output.class );
-					verify( mergeCommitsCheckRunUpdateBuilderMock ).add( outputCaptor.capture() );
+					verify( contributionRulesCheckRunUpdateBuilderMock ).add( outputCaptor.capture() );
 					var output = outputCaptor.getValue();
 					assertThat( output )
 							.extracting( "title", InstanceOfAssertFactories.STRING )
-							.isEqualTo( "The pull request should not contain fixup! or squash! commits" );
+							.contains( "rules failed" );
 					assertThat( output )
 							.extracting( "summary", InstanceOfAssertFactories.STRING )
 							.contains(
