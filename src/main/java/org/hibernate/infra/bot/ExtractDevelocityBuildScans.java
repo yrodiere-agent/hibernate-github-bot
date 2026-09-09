@@ -436,9 +436,22 @@ public class ExtractDevelocityBuildScans {
 			if ( outcome != null && outcome.getOverall() != null
 					&& (outcome.getOverall() == TestOutcome.FAILED
 							|| outcome.getOverall() == TestOutcome.FLAKY) ) {
-				result.computeIfAbsent( container.getName(), k -> new ArrayList<>() ).add( scan );
+				if ( hasGrandchildren( container ) ) {
+					collectFailingContainerNames( container.getChildren(), scan, result );
+				}
+				else {
+					result.computeIfAbsent( container.getName(), k -> new ArrayList<>() ).add( scan );
+				}
 			}
 		}
+	}
+
+	private boolean hasGrandchildren(BuildTestOrContainer container) {
+		if ( container.getChildren() == null || container.getChildren().isEmpty() ) {
+			return false;
+		}
+		return container.getChildren().stream()
+				.anyMatch( child -> child.getChildren() != null && !child.getChildren().isEmpty() );
 	}
 
 	private static String extractScanId(DevelocityCIBuildScan scan) {
