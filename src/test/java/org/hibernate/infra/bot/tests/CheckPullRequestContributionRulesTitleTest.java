@@ -4,6 +4,8 @@ import static io.quarkiverse.githubapp.testing.GitHubAppTesting.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hibernate.infra.bot.tests.PullRequestMockHelper.mockPagedIterable;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.ignoreStubs;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -44,12 +46,13 @@ public class CheckPullRequestContributionRulesTitleTest extends AbstractPullRequ
 				.github( mocks -> {
 					mocks.configFile("hibernate-github-bot.yml")
 							.fromString( """
+									features: [ CHECK_CONTRIBUTION_RULES ]
 									jira:
 									  projectKey: "HSEARCH"
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					when( repoMock.getId() ).thenReturn( repoId );
+					lenient().when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 Correct message" )
@@ -75,7 +78,7 @@ public class CheckPullRequestContributionRulesTitleTest extends AbstractPullRequ
 									❌ The pull request title should not end with an ellipsis (make sure the title is complete)
 
 									› This message was automatically generated.""" );
-					verifyNoMoreInteractions( mocks.ghObjects() );
+					verifyNoMoreInteractions( ignoreStubs( mocks.ghObjects() ) );
 				} );
 	}
 

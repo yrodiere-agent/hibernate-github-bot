@@ -2,6 +2,8 @@ package org.hibernate.infra.bot.tests;
 
 import static io.quarkiverse.githubapp.testing.GitHubAppTesting.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.ignoreStubs;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -39,7 +41,7 @@ public class CheckPullRequestContributionRulesFixupSquashTest extends AbstractPu
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					when( repoMock.getId() ).thenReturn( repoId );
+					lenient().when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 Correct message" )
@@ -62,7 +64,7 @@ public class CheckPullRequestContributionRulesFixupSquashTest extends AbstractPu
 							.extracting( "title", InstanceOfAssertFactories.STRING )
 							.contains( "All rules passed" );
 
-					verifyNoMoreInteractions( mocks.ghObjects() );
+					verifyNoMoreInteractions( ignoreStubs( mocks.ghObjects() ) );
 				} );
 	}
 
@@ -79,7 +81,7 @@ public class CheckPullRequestContributionRulesFixupSquashTest extends AbstractPu
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					when( repoMock.getId() ).thenReturn( repoId );
+					lenient().when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 Some work" )
@@ -121,7 +123,7 @@ public class CheckPullRequestContributionRulesFixupSquashTest extends AbstractPu
 									"interactive rebase",
 									"https://git-scm.com/docs/git-rebase#_interactive_mode"
 							);
-					verifyNoMoreInteractions( mocks.ghObjects() );
+					verifyNoMoreInteractions( ignoreStubs( mocks.ghObjects() ) );
 				} );
 	}
 
@@ -138,7 +140,7 @@ public class CheckPullRequestContributionRulesFixupSquashTest extends AbstractPu
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					when( repoMock.getId() ).thenReturn( repoId );
+					lenient().when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 Some work" )
@@ -180,7 +182,7 @@ public class CheckPullRequestContributionRulesFixupSquashTest extends AbstractPu
 									"interactive rebase",
 									"https://git-scm.com/docs/git-rebase#_interactive_mode"
 							);
-					verifyNoMoreInteractions( mocks.ghObjects() );
+					verifyNoMoreInteractions( ignoreStubs( mocks.ghObjects() ) );
 				} );
 	}
 }

@@ -9,6 +9,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.hibernate.infra.bot.config.DeploymentConfig;
+import org.hibernate.infra.bot.config.Feature;
 import org.hibernate.infra.bot.config.RepositoryConfig;
 import org.hibernate.infra.bot.util.CommitMessages;
 
@@ -44,6 +45,9 @@ public class EditPullRequestBodyAddIssueLinks {
 			@PullRequest.Opened @PullRequest.Reopened @PullRequest.Edited @PullRequest.Synchronize
 			GHEventPayload.PullRequest payload,
 			@ConfigFile( "hibernate-github-bot.yml" ) RepositoryConfig repositoryConfig) throws IOException {
+		if ( !Feature.EDIT_PULL_REQUEST_BODY_ADD_ISSUE_LINKS.isEnabled( repositoryConfig ) ) {
+			return;
+		}
 		editPullRequestBodyAddIssueLinks( payload.getRepository(), repositoryConfig, payload.getPullRequest() );
 	}
 

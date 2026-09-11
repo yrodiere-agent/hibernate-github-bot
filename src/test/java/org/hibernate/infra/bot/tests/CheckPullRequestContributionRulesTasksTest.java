@@ -4,6 +4,8 @@ import static io.quarkiverse.githubapp.testing.GitHubAppTesting.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.ignoreStubs;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -61,6 +63,7 @@ public class CheckPullRequestContributionRulesTasksTest extends AbstractPullRequ
 				.github( mocks -> {
 					mocks.configFile("hibernate-github-bot.yml")
 							.fromString( """
+									features: [ CHECK_CONTRIBUTION_RULES, EDIT_PULL_REQUEST_BODY_ADD_TASK_LIST ]
 									jira:
 									  projectKey: "HSEARCH"
 									pullRequestTasks:
@@ -84,7 +87,7 @@ public class CheckPullRequestContributionRulesTasksTest extends AbstractPullRequ
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					when( repoMock.getId() ).thenReturn( repoId );
+					lenient().when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 Correct message" )
@@ -128,7 +131,7 @@ public class CheckPullRequestContributionRulesTasksTest extends AbstractPullRequ
 
 
 									 <!-- Hibernate GitHub Bot task list end -->""" );
-					verifyNoMoreInteractions( mocks.ghObjects() );
+					verifyNoMoreInteractions( ignoreStubs( mocks.ghObjects() ) );
 				} );
 	}
 
@@ -140,6 +143,7 @@ public class CheckPullRequestContributionRulesTasksTest extends AbstractPullRequ
 				.github( mocks -> {
 					mocks.configFile("hibernate-github-bot.yml")
 							.fromString( """
+									features: [ CHECK_CONTRIBUTION_RULES, EDIT_PULL_REQUEST_BODY_ADD_TASK_LIST ]
 									jira:
 									  projectKey: "HSEARCH"
 									pullRequestTasks:
@@ -163,7 +167,7 @@ public class CheckPullRequestContributionRulesTasksTest extends AbstractPullRequ
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					when( repoMock.getId() ).thenReturn( repoId );
+					lenient().when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 Correct message" )
@@ -178,7 +182,7 @@ public class CheckPullRequestContributionRulesTasksTest extends AbstractPullRequ
 				.github( mocks -> {
 					GHPullRequest prMock = mocks.pullRequest( prId );
 					verify( prMock, times(0) ).comment( any() );
-					verifyNoMoreInteractions( mocks.ghObjects() );
+					verifyNoMoreInteractions( ignoreStubs( mocks.ghObjects() ) );
 				} );
 	}
 
@@ -190,6 +194,7 @@ public class CheckPullRequestContributionRulesTasksTest extends AbstractPullRequ
 				.github( mocks -> {
 					mocks.configFile("hibernate-github-bot.yml")
 							.fromString( """
+									features: [ CHECK_CONTRIBUTION_RULES, EDIT_PULL_REQUEST_BODY_ADD_TASK_LIST ]
 									jira:
 									  projectKey: "HSEARCH"
 									  # We also ignore jira keys check as dependabot PRs won't have them anyways:
@@ -220,7 +225,7 @@ public class CheckPullRequestContributionRulesTasksTest extends AbstractPullRequ
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					when( repoMock.getId() ).thenReturn( repoId );
+					lenient().when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.noComments();
@@ -232,7 +237,7 @@ public class CheckPullRequestContributionRulesTasksTest extends AbstractPullRequ
 				.event( GHEvent.PULL_REQUEST )
 				.then()
 				.github( mocks -> {
-					verifyNoMoreInteractions( mocks.ghObjects() );
+					verifyNoMoreInteractions( ignoreStubs( mocks.ghObjects() ) );
 				} );
 	}
 

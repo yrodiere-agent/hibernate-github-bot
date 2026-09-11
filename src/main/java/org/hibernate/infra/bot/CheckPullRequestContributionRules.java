@@ -15,6 +15,7 @@ import org.hibernate.infra.bot.prcheck.PullRequestCheckRunContext;
 import org.hibernate.infra.bot.prcheck.PullRequestCheckRunOutput;
 import org.hibernate.infra.bot.prcheck.PullRequestCheckRunRule;
 import org.hibernate.infra.bot.config.DeploymentConfig;
+import org.hibernate.infra.bot.config.Feature;
 import org.hibernate.infra.bot.config.RepositoryConfig;
 import org.hibernate.infra.bot.util.CommitMessages;
 import org.hibernate.infra.bot.util.GlobMatcher;
@@ -62,6 +63,9 @@ public class CheckPullRequestContributionRules {
 			@ConfigFile("hibernate-github-bot.yml") RepositoryConfig repositoryConfig,
 			@ConfigFile("PULL_REQUEST_TEMPLATE.md") String pullRequestTemplate,
 			GitHub gitHub) throws IOException {
+		if ( !Feature.CHECK_CONTRIBUTION_RULES.isEnabled( repositoryConfig ) ) {
+			return;
+		}
 		checkPullRequestContributionRules( payload.getRepository(), gitHub, repositoryConfig, pullRequestTemplate, payload.getPullRequest() );
 	}
 
@@ -69,6 +73,9 @@ public class CheckPullRequestContributionRules {
 			@ConfigFile("hibernate-github-bot.yml") RepositoryConfig repositoryConfig,
 			@ConfigFile("PULL_REQUEST_TEMPLATE.md") String pullRequestTemplate,
 			GitHub gitHub) throws IOException {
+		if ( !Feature.CHECK_CONTRIBUTION_RULES.isEnabled( repositoryConfig ) ) {
+			return;
+		}
 		for ( GHPullRequest pullRequest : associatedPullRequests( payload.getRepository(),
 				payload.getCheckRun().getPullRequests(), payload.getCheckRun().getHeadSha() ) ) {
 			checkPullRequestContributionRules( payload.getRepository(), gitHub, repositoryConfig, pullRequestTemplate, pullRequest );
@@ -79,6 +86,9 @@ public class CheckPullRequestContributionRules {
 			@ConfigFile("hibernate-github-bot.yml") RepositoryConfig repositoryConfig,
 			@ConfigFile("PULL_REQUEST_TEMPLATE.md") String pullRequestTemplate,
 			GitHub gitHub) throws IOException {
+		if ( !Feature.CHECK_CONTRIBUTION_RULES.isEnabled( repositoryConfig ) ) {
+			return;
+		}
 		for ( GHPullRequest pullRequest : associatedPullRequests( payload.getRepository(),
 				payload.getCheckSuite().getPullRequests(), payload.getCheckSuite().getHeadSha() ) ) {
 			checkPullRequestContributionRules( payload.getRepository(), gitHub, repositoryConfig, pullRequestTemplate, pullRequest );

@@ -47,6 +47,7 @@ public class ExtractDevelocityBuildScansTest {
 	private static final String REPO_NAME = "hibernate/hibernate-orm";
 	private static final long DEVELOCITY_CHECK_RUN_ID = 999L;
 	private static final String DEVELOCITY_BUILD_SCAN_CONFIG = """
+			features: [ EXTRACT_DEVELOCITY_BUILD_SCANS ]
 			develocity:
 			  buildScan:
 			    addCheck: true

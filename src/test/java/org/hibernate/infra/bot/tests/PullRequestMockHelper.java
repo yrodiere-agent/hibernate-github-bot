@@ -26,7 +26,7 @@ public class PullRequestMockHelper {
 	public static PullRequestMockHelper start(GitHubMockContext context, long prId, GHRepository repoMock) {
 		GHPullRequest pullRequestMock = context.pullRequest( prId );
 		GHCommitPointer baseMock = stub( GHCommitPointer.class );
-		when( pullRequestMock.getBase() ).thenReturn( baseMock );
+		lenient().when( pullRequestMock.getBase() ).thenReturn( baseMock );
 		when( baseMock.getRepository() ).thenReturn( repoMock );
 		return new PullRequestMockHelper( repoMock, pullRequestMock, baseMock );
 	}
@@ -44,8 +44,8 @@ public class PullRequestMockHelper {
 		this.pullRequestMock = pullRequestMock;
 		this.baseMock = baseMock;
 		this.commitDetailsMocks = new ArrayList<>();
-		PagedIterable<GHPullRequestCommitDetail> commitIterableMock = mockPagedIterable( commitDetailsMocks );
-		when( pullRequestMock.listCommits() ).thenReturn( commitIterableMock );
+		PagedIterable<GHPullRequestCommitDetail> commitIterableMock = mockLenientPagedIterable( commitDetailsMocks );
+		lenient().when( pullRequestMock.listCommits() ).thenReturn( commitIterableMock );
 		this.fileDetailsMocks = new ArrayList<>();
 		PagedIterable<GHPullRequestFileDetail> fileIterableMock = mockLenientPagedIterable( fileDetailsMocks );
 		lenient().when( pullRequestMock.listFiles() ).thenReturn( fileIterableMock );
@@ -131,8 +131,8 @@ public class PullRequestMockHelper {
 	private void initCommentsMocks() throws IOException {
 		if ( commentsMocks == null ) {
 			commentsMocks = new ArrayList<>();
-			PagedIterable<GHIssueComment> commitIterableMock = mockPagedIterable( commentsMocks );
-			when( pullRequestMock.listComments() ).thenReturn( commitIterableMock );
+			PagedIterable<GHIssueComment> commitIterableMock = mockLenientPagedIterable( commentsMocks );
+			lenient().when( pullRequestMock.listComments() ).thenReturn( commitIterableMock );
 		}
 	}
 
@@ -163,6 +163,6 @@ public class PullRequestMockHelper {
 	}
 
 	private static <T> T stub(Class<T> clazz) {
-		return mock( clazz, withSettings().stubOnly() );
+		return mock( clazz, withSettings().stubOnly().lenient() );
 	}
 }

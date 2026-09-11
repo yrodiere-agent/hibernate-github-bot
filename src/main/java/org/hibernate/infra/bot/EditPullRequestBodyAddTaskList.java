@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.hibernate.infra.bot.config.DeploymentConfig;
+import org.hibernate.infra.bot.config.Feature;
 import org.hibernate.infra.bot.config.RepositoryConfig;
 import org.hibernate.infra.bot.jira.JiraIssue;
 import org.hibernate.infra.bot.jira.JiraIssues;
@@ -46,6 +47,9 @@ public class EditPullRequestBodyAddTaskList {
 			GHEventPayload.PullRequest payload,
 			@ConfigFile("hibernate-github-bot.yml") RepositoryConfig repositoryConfig
 	) throws IOException {
+		if ( !Feature.EDIT_PULL_REQUEST_BODY_ADD_TASK_LIST.isEnabled( repositoryConfig ) ) {
+			return;
+		}
 		addUpdateTaskList( payload.getRepository(), repositoryConfig, payload.getPullRequest() );
 	}
 
