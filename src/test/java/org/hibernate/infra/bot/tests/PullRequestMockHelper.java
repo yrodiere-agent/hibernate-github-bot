@@ -1,5 +1,6 @@
 package org.hibernate.infra.bot.tests;
 
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
@@ -15,6 +16,7 @@ import org.kohsuke.github.GHCommitPointer;
 import org.kohsuke.github.GHIssueComment;
 import org.kohsuke.github.GHPullRequest;
 import org.kohsuke.github.GHPullRequestCommitDetail;
+import org.kohsuke.github.GHPullRequestFileDetail;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.PagedIterable;
 import org.kohsuke.github.PagedIterator;
@@ -35,6 +37,7 @@ public class PullRequestMockHelper {
 
 	private List<GHIssueComment> commentsMocks;
 	private final List<GHPullRequestCommitDetail> commitDetailsMocks;
+	private final List<GHPullRequestFileDetail> fileDetailsMocks;
 
 	private PullRequestMockHelper(GHRepository repoMock, GHPullRequest pullRequestMock, GHCommitPointer baseMock) {
 		this.repoMock = repoMock;
@@ -43,6 +46,9 @@ public class PullRequestMockHelper {
 		this.commitDetailsMocks = new ArrayList<>();
 		PagedIterable<GHPullRequestCommitDetail> commitIterableMock = mockPagedIterable( commitDetailsMocks );
 		when( pullRequestMock.listCommits() ).thenReturn( commitIterableMock );
+		this.fileDetailsMocks = new ArrayList<>();
+		PagedIterable<GHPullRequestFileDetail> fileIterableMock = mockLenientPagedIterable( fileDetailsMocks );
+		lenient().when( pullRequestMock.listFiles() ).thenReturn( fileIterableMock );
 	}
 
 	public PullRequestMockHelper baseRef(String ref) {
@@ -102,6 +108,13 @@ public class PullRequestMockHelper {
 		return this;
 	}
 
+	public PullRequestMockHelper file(String filename) {
+		GHPullRequestFileDetail detail = stub( GHPullRequestFileDetail.class );
+		when( detail.getFilename() ).thenReturn( filename );
+		fileDetailsMocks.add( detail );
+		return this;
+	}
+
 	public PullRequestMockHelper comment(String body) throws IOException {
 		initCommentsMocks();
 		GHIssueComment commentMock = stub( GHIssueComment.class );
@@ -127,6 +140,19 @@ public class PullRequestMockHelper {
 	public static <T> PagedIterable<T> mockPagedIterable(List<T> contentMocks) {
 		PagedIterable<T> iterableMock = mock( PagedIterable.class );
 		when( iterableMock.iterator() ).thenAnswer( ignored -> {
+			PagedIterator<T> iteratorMock = mock( PagedIterator.class );
+			Iterator<T> actualIterator = contentMocks.iterator();
+			when( iteratorMock.next() ).thenAnswer( ignored2 -> actualIterator.next() );
+			when( iteratorMock.hasNext() ).thenAnswer( ignored2 -> actualIterator.hasNext() );
+			return iteratorMock;
+		} );
+		return iterableMock;
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T> PagedIterable<T> mockLenientPagedIterable(List<T> contentMocks) {
+		PagedIterable<T> iterableMock = mock( PagedIterable.class );
+		lenient().when( iterableMock.iterator() ).thenAnswer( ignored -> {
 			PagedIterator<T> iteratorMock = mock( PagedIterator.class );
 			Iterator<T> actualIterator = contentMocks.iterator();
 			when( iteratorMock.next() ).thenAnswer( ignored2 -> actualIterator.next() );
