@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hibernate.infra.bot.tests.PullRequestMockHelper.mockPagedIterable;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.ignoreStubs;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -66,7 +65,7 @@ public class CheckPullRequestContributionRulesLicenseTest extends AbstractPullRe
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					lenient().when( repoMock.getId() ).thenReturn( repoId );
+					when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 Correct message" )
@@ -136,7 +135,7 @@ public class CheckPullRequestContributionRulesLicenseTest extends AbstractPullRe
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					lenient().when( repoMock.getId() ).thenReturn( repoId );
+					when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 Correct message" )
@@ -191,7 +190,7 @@ public class CheckPullRequestContributionRulesLicenseTest extends AbstractPullRe
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					lenient().when( repoMock.getId() ).thenReturn( repoId );
+					when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.noComments();
@@ -246,7 +245,7 @@ public class CheckPullRequestContributionRulesLicenseTest extends AbstractPullRe
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					lenient().when( repoMock.getId() ).thenReturn( repoId );
+					when( repoMock.getId() ).thenReturn( repoId );
 					GitHub gitHubMock = mocks.installationClient( 15144501L ); // see the submitted JSON file for this value
 					GHOrganization organization = mock( GHOrganization.class );
 					GHTeam team = mock( GHTeam.class );

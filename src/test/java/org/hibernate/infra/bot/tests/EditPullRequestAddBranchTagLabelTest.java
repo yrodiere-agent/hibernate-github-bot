@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.ignoreStubs;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -47,7 +46,7 @@ public class EditPullRequestAddBranchTagLabelTest extends AbstractPullRequestTes
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					lenient().when( repoMock.getId() ).thenReturn( repoId );
+					when( repoMock.getId() ).thenReturn( repoId );
 					when( repoMock.getLabel( any() ) ).thenAnswer( invocation -> {
 						GHLabel label = mock( GHLabel.class );
 						when( label.getName() ).thenReturn( "base-ref" );
@@ -92,7 +91,7 @@ public class EditPullRequestAddBranchTagLabelTest extends AbstractPullRequestTes
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					lenient().when( repoMock.getId() ).thenReturn( repoId );
+					when( repoMock.getId() ).thenReturn( repoId );
 					when( repoMock.getLabel( any() ) ).thenThrow( GHFileNotFoundException.class );
 
 					when( repoMock.createLabel( any(), any(), any() ) ).thenAnswer( invocation -> {
@@ -150,7 +149,7 @@ public class EditPullRequestAddBranchTagLabelTest extends AbstractPullRequestTes
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					lenient().when( repoMock.getId() ).thenReturn( repoId );
+					when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 Correct message" )
@@ -192,7 +191,7 @@ public class EditPullRequestAddBranchTagLabelTest extends AbstractPullRequestTes
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					lenient().when( repoMock.getId() ).thenReturn( repoId );
+					when( repoMock.getId() ).thenReturn( repoId );
 					when( repoMock.getLabel( any() ) ).thenAnswer( invocation -> {
 						GHLabel label = mock( GHLabel.class );
 						when( label.getName() ).thenReturn( "base-ref" );
