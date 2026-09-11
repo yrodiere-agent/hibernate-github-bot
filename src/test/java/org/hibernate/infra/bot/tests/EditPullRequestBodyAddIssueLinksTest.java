@@ -16,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static io.quarkiverse.githubapp.testing.GitHubAppTesting.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.ignoreStubs;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -42,7 +41,7 @@ public class EditPullRequestBodyAddIssueLinksTest extends AbstractPullRequestTes
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					lenient().when( repoMock.getId() ).thenReturn( repoId );
+					when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 Commit 1" )
@@ -87,7 +86,7 @@ public class EditPullRequestBodyAddIssueLinksTest extends AbstractPullRequestTes
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					lenient().when( repoMock.getId() ).thenReturn( repoId );
+					when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 HSEARCH-1112 Commit 1" )
@@ -131,7 +130,7 @@ public class EditPullRequestBodyAddIssueLinksTest extends AbstractPullRequestTes
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					lenient().when( repoMock.getId() ).thenReturn( repoId );
+					when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 Commit 1" )
@@ -174,7 +173,7 @@ public class EditPullRequestBodyAddIssueLinksTest extends AbstractPullRequestTes
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					lenient().when( repoMock.getId() ).thenReturn( repoId );
+					when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 Commit 1" )
@@ -220,7 +219,6 @@ public class EditPullRequestBodyAddIssueLinksTest extends AbstractPullRequestTes
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					lenient().when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 Commit 1" )
@@ -258,7 +256,7 @@ public class EditPullRequestBodyAddIssueLinksTest extends AbstractPullRequestTes
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					lenient().when( repoMock.getId() ).thenReturn( repoId );
+					when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 Commit 1" )

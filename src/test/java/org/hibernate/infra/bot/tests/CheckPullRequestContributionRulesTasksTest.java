@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.ignoreStubs;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -87,7 +86,7 @@ public class CheckPullRequestContributionRulesTasksTest extends AbstractPullRequ
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					lenient().when( repoMock.getId() ).thenReturn( repoId );
+					when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 Correct message" )
@@ -167,7 +166,7 @@ public class CheckPullRequestContributionRulesTasksTest extends AbstractPullRequ
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					lenient().when( repoMock.getId() ).thenReturn( repoId );
+					when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 Correct message" )
@@ -225,7 +224,7 @@ public class CheckPullRequestContributionRulesTasksTest extends AbstractPullRequ
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					lenient().when( repoMock.getId() ).thenReturn( repoId );
+					when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.noComments();
