@@ -17,10 +17,10 @@ import org.hibernate.infra.bot.util.Patterns;
 public class RepositoryConfig {
 
 	@JsonDeserialize(as = HashSet.class)
-	public Set<Feature> features = Set.of();
+	public Set<Feature> features;
 
 	public boolean isFeatureEnabled(Feature feature) {
-		return features.isEmpty() || features.contains( Feature.ALL ) || features.contains( feature );
+		return features == null || features.contains( Feature.ALL ) || features.contains( feature );
 	}
 
 	public JiraConfig jira;
