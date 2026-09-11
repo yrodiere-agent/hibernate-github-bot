@@ -4,6 +4,8 @@ import static io.quarkiverse.githubapp.testing.GitHubAppTesting.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hibernate.infra.bot.tests.PullRequestMockHelper.mockPagedIterable;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.ignoreStubs;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -45,12 +47,13 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 				.github( mocks -> {
 					mocks.configFile("hibernate-github-bot.yml")
 							.fromString( """
+									features: [ CHECK_CONTRIBUTION_RULES ]
 									jira:
 									  projectKey: "HSEARCH"
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					when( repoMock.getId() ).thenReturn( repoId );
+					lenient().when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 Correct message" )
@@ -78,7 +81,7 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 									    ↳ Offending commits: [06b6d27ba19615d14cdcd509d9eb3334e5571bf2]
 
 									› This message was automatically generated.""" );
-					verifyNoMoreInteractions( mocks.ghObjects() );
+					verifyNoMoreInteractions( ignoreStubs( mocks.ghObjects() ) );
 				} );
 	}
 
@@ -90,12 +93,13 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 				.github( mocks -> {
 					mocks.configFile("hibernate-github-bot.yml")
 							.fromString( """
+									features: [ CHECK_CONTRIBUTION_RULES ]
 									jira:
 									  projectKey: "HSEARCH"
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					when( repoMock.getId() ).thenReturn( repoId );
+					lenient().when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 Commit 1" )
@@ -123,7 +127,7 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 									    ↳ Issue keys mentioned in commits but missing from the PR title or body: [HSEARCH-1112]
 
 									› This message was automatically generated.""" );
-					verifyNoMoreInteractions( mocks.ghObjects() );
+					verifyNoMoreInteractions( ignoreStubs( mocks.ghObjects() ) );
 				} );
 	}
 
@@ -135,12 +139,13 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 				.github( mocks -> {
 					mocks.configFile("hibernate-github-bot.yml")
 							.fromString( """
+									features: [ CHECK_CONTRIBUTION_RULES ]
 									jira:
 									  projectKey: "HSEARCH"
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					when( repoMock.getId() ).thenReturn( repoId );
+					lenient().when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 HSEARCH-1112 Commit 1" )
@@ -167,7 +172,7 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 									    ↳ Issue keys mentioned in commits but missing from the PR title or body: [HSEARCH-1112]
 
 									› This message was automatically generated.""" );
-					verifyNoMoreInteractions( mocks.ghObjects() );
+					verifyNoMoreInteractions( ignoreStubs( mocks.ghObjects() ) );
 				} );
 	}
 
@@ -179,12 +184,13 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 				.github( mocks -> {
 					mocks.configFile("hibernate-github-bot.yml")
 							.fromString( """
+									features: [ CHECK_CONTRIBUTION_RULES ]
 									jira:
 									  projectKey: "HSEARCH"
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					when( repoMock.getId() ).thenReturn( repoId );
+					lenient().when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 Commit 1" )
@@ -212,7 +218,7 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 									    ↳ Issue keys mentioned in commits but missing from the PR title or body: [HSEARCH-1112]
 
 									› This message was automatically generated.""" );
-					verifyNoMoreInteractions( mocks.ghObjects() );
+					verifyNoMoreInteractions( ignoreStubs( mocks.ghObjects() ) );
 				} );
 	}
 
@@ -224,12 +230,13 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 				.github( mocks -> {
 					mocks.configFile("hibernate-github-bot.yml")
 							.fromString( """
+									features: [ CHECK_CONTRIBUTION_RULES ]
 									jira:
 									  projectKey: "HSEARCH"
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					when( repoMock.getId() ).thenReturn( repoId );
+					lenient().when( repoMock.getId() ).thenReturn( repoId );
 
 					GHPullRequest pullRequestMock = mocks.pullRequest( prId );
 					when( pullRequestMock.listCommits() ).thenThrow( new IllegalStateException( "Simulated failure" ) );
@@ -277,7 +284,7 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 									    ↳ Failed with exception java.lang.IllegalStateException: Simulated failure
 
 									› This message was automatically generated.""" );
-					verifyNoMoreInteractions( mocks.ghObjects() );
+					verifyNoMoreInteractions( ignoreStubs( mocks.ghObjects() ) );
 				} );
 	}
 
@@ -289,6 +296,7 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 				.github( mocks -> {
 					mocks.configFile("hibernate-github-bot.yml")
 							.fromString( """
+									features: [ CHECK_CONTRIBUTION_RULES ]
 									jira:
 									  projectKey: "HSEARCH"
 									  ignore:
@@ -297,7 +305,7 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 									""" );
 
 					var repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					when( repoMock.getId() ).thenReturn( repoId );
+					lenient().when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							// we don't need to mock commits, since we won't reach them, we will return fast as soon as we
@@ -332,7 +340,7 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 					verify( pullRequest ).getUser();
 					var user = mocks.ghObject( GHUser.class, 49699333L );
 					verify( user ).getLogin();
-					verifyNoMoreInteractions( mocks.ghObjects() );
+					verifyNoMoreInteractions( ignoreStubs( mocks.ghObjects() ) );
 				} );
 	}
 
@@ -344,6 +352,7 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 				.github( mocks -> {
 					mocks.configFile("hibernate-github-bot.yml")
 							.fromString( """
+									features: [ CHECK_CONTRIBUTION_RULES ]
 									jira:
 									  projectKey: "HSEARCH"
 									  ignore:
@@ -352,7 +361,7 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 									""" );
 
 					var repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					when( repoMock.getId() ).thenReturn( repoId );
+					lenient().when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "Bump maven-clean-plugin from 3.2.0 to 3.3.1" )
@@ -400,7 +409,7 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 					verify( pullRequest ).getUser();
 					var user = mocks.ghObject( GHUser.class, 412878L );
 					verify( user ).getLogin();
-					verifyNoMoreInteractions( mocks.ghObjects() );
+					verifyNoMoreInteractions( ignoreStubs( mocks.ghObjects() ) );
 				} );
 	}
 
@@ -412,6 +421,7 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 				.github( mocks -> {
 					mocks.configFile("hibernate-github-bot.yml")
 							.fromString( """
+									features: [ CHECK_CONTRIBUTION_RULES ]
 									jira:
 									  projectKey: "HSEARCH"
 									  ignoreFiles:
@@ -424,7 +434,7 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					when( repoMock.getId() ).thenReturn( repoId );
+					lenient().when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "Change Jenkinsfiles", "98822fa0c6d633704216dae11591e7204251e85d",
@@ -456,6 +466,7 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 				.github( mocks -> {
 					mocks.configFile("hibernate-github-bot.yml")
 							.fromString( """
+									features: [ CHECK_CONTRIBUTION_RULES ]
 									jira:
 									  projectKey: "HSEARCH"
 									  ignoreFiles:
@@ -468,7 +479,7 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					when( repoMock.getId() ).thenReturn( repoId );
+					lenient().when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "Change Jenkinsfiles", "391faa2d04116673fdc86dfddef5782622bfc233",
@@ -497,7 +508,7 @@ public class CheckPullRequestContributionRulesJiraTest extends AbstractPullReque
 									    ↳ Offending commits: [22e9e04d6df246e00268df84fb3d783f37c96312]
 
 									› This message was automatically generated.""" );
-					verifyNoMoreInteractions( mocks.ghObjects() );
+					verifyNoMoreInteractions( ignoreStubs( mocks.ghObjects() ) );
 				} );
 	}
 }

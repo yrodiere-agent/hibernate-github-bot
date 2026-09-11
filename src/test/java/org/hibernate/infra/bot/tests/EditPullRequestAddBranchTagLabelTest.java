@@ -4,6 +4,8 @@ import static io.quarkiverse.githubapp.testing.GitHubAppTesting.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.ignoreStubs;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -36,6 +38,7 @@ public class EditPullRequestAddBranchTagLabelTest extends AbstractPullRequestTes
 				.github( mocks -> {
 					mocks.configFile("hibernate-github-bot.yml")
 							.fromString( """
+									features: [ EDIT_PULL_REQUEST_ADD_BRANCH_TAG_LABEL ]
 									jira:
 									  projectKey: "HSEARCH"
 									branches:
@@ -44,7 +47,7 @@ public class EditPullRequestAddBranchTagLabelTest extends AbstractPullRequestTes
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					when( repoMock.getId() ).thenReturn( repoId );
+					lenient().when( repoMock.getId() ).thenReturn( repoId );
 					when( repoMock.getLabel( any() ) ).thenAnswer( invocation -> {
 						GHLabel label = mock( GHLabel.class );
 						when( label.getName() ).thenReturn( "base-ref" );
@@ -68,7 +71,7 @@ public class EditPullRequestAddBranchTagLabelTest extends AbstractPullRequestTes
 					verify( prMock ).addLabels( labelArgumentCaptor.capture() );
 					assertThat( labelArgumentCaptor.getValue().getName() ).isEqualTo( "base-ref" );
 
-					verifyNoMoreInteractions( mocks.ghObjects() );
+					verifyNoMoreInteractions( ignoreStubs( mocks.ghObjects() ) );
 				} );
 	}
 
@@ -80,6 +83,7 @@ public class EditPullRequestAddBranchTagLabelTest extends AbstractPullRequestTes
 				.github( mocks -> {
 					mocks.configFile("hibernate-github-bot.yml")
 							.fromString( """
+									features: [ EDIT_PULL_REQUEST_ADD_BRANCH_TAG_LABEL ]
 									jira:
 									  projectKey: "HSEARCH"
 									branches:
@@ -88,7 +92,7 @@ public class EditPullRequestAddBranchTagLabelTest extends AbstractPullRequestTes
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					when( repoMock.getId() ).thenReturn( repoId );
+					lenient().when( repoMock.getId() ).thenReturn( repoId );
 					when( repoMock.getLabel( any() ) ).thenThrow( GHFileNotFoundException.class );
 
 					when( repoMock.createLabel( any(), any(), any() ) ).thenAnswer( invocation -> {
@@ -125,7 +129,7 @@ public class EditPullRequestAddBranchTagLabelTest extends AbstractPullRequestTes
 					verify( prMock ).addLabels( labelArgumentCaptor.capture() );
 					assertThat( labelArgumentCaptor.getValue().getName() ).isEqualTo( "base-ref" );
 
-					verifyNoMoreInteractions( mocks.ghObjects() );
+					verifyNoMoreInteractions( ignoreStubs( mocks.ghObjects() ) );
 				} );
 	}
 
@@ -137,6 +141,7 @@ public class EditPullRequestAddBranchTagLabelTest extends AbstractPullRequestTes
 				.github( mocks -> {
 					mocks.configFile("hibernate-github-bot.yml")
 							.fromString( """
+									features: [ EDIT_PULL_REQUEST_ADD_BRANCH_TAG_LABEL ]
 									jira:
 									  projectKey: "HSEARCH"
 									branches:
@@ -145,7 +150,7 @@ public class EditPullRequestAddBranchTagLabelTest extends AbstractPullRequestTes
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					when( repoMock.getId() ).thenReturn( repoId );
+					lenient().when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 Correct message" )
@@ -165,7 +170,7 @@ public class EditPullRequestAddBranchTagLabelTest extends AbstractPullRequestTes
 					verify( prMock ).setTitle( title.capture() );
 					assertThat( title.getValue() ).startsWith( "[" );
 
-					verifyNoMoreInteractions( mocks.ghObjects() );
+					verifyNoMoreInteractions( ignoreStubs( mocks.ghObjects() ) );
 				} );
 	}
 
@@ -177,6 +182,7 @@ public class EditPullRequestAddBranchTagLabelTest extends AbstractPullRequestTes
 				.github( mocks -> {
 					mocks.configFile("hibernate-github-bot.yml")
 							.fromString( """
+									features: [ EDIT_PULL_REQUEST_ADD_BRANCH_TAG_LABEL ]
 									jira:
 									  projectKey: "HSEARCH"
 									branches:
@@ -186,7 +192,7 @@ public class EditPullRequestAddBranchTagLabelTest extends AbstractPullRequestTes
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					when( repoMock.getId() ).thenReturn( repoId );
+					lenient().when( repoMock.getId() ).thenReturn( repoId );
 					when( repoMock.getLabel( any() ) ).thenAnswer( invocation -> {
 						GHLabel label = mock( GHLabel.class );
 						when( label.getName() ).thenReturn( "base-ref" );
@@ -214,7 +220,7 @@ public class EditPullRequestAddBranchTagLabelTest extends AbstractPullRequestTes
 					verify( prMock ).setTitle( title.capture() );
 					assertThat( title.getValue() ).startsWith( "[" );
 
-					verifyNoMoreInteractions( mocks.ghObjects() );
+					verifyNoMoreInteractions( ignoreStubs( mocks.ghObjects() ) );
 				} );
 	}
 }

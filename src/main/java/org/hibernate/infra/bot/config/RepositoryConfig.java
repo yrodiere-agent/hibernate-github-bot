@@ -3,14 +3,25 @@ package org.hibernate.infra.bot.config;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Pattern;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import org.hibernate.infra.bot.util.Patterns;
 
 public class RepositoryConfig {
+
+	@JsonDeserialize(as = HashSet.class)
+	public Set<Feature> features = Set.of();
+
+	public boolean isFeatureEnabled(Feature feature) {
+		return features.isEmpty() || features.contains( Feature.ALL ) || features.contains( feature );
+	}
 
 	public JiraConfig jira;
 

@@ -6,6 +6,7 @@ import java.util.Locale;
 import java.util.Random;
 
 import org.hibernate.infra.bot.config.DeploymentConfig;
+import org.hibernate.infra.bot.config.Feature;
 import org.hibernate.infra.bot.config.RepositoryConfig;
 
 import org.jboss.logging.Logger;
@@ -32,6 +33,9 @@ public class EditPullRequestAddBranchTagLabel {
 			GHEventPayload.PullRequest payload,
 			@ConfigFile("hibernate-github-bot.yml") RepositoryConfig repositoryConfig
 	) throws IOException {
+		if ( !Feature.EDIT_PULL_REQUEST_ADD_BRANCH_TAG_LABEL.isEnabled( repositoryConfig ) ) {
+			return;
+		}
 		addTagOrLabel( payload.getRepository(), repositoryConfig, payload.getPullRequest() );
 	}
 

@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import jakarta.inject.Inject;
 
 import org.hibernate.infra.bot.config.DeploymentConfig;
+import org.hibernate.infra.bot.config.Feature;
 import org.hibernate.infra.bot.config.RepositoryConfig;
 import org.hibernate.infra.bot.develocity.DevelocityCIBuildScan;
 import org.hibernate.infra.bot.develocity.DevelocityFailingTest;
@@ -73,6 +74,9 @@ public class ExtractDevelocityBuildScans {
 
 	void checkRunRerequested(@CheckRun.Rerequested GHEventPayload.CheckRun payload,
 			@ConfigFile("hibernate-github-bot.yml") RepositoryConfig repositoryConfig) {
+		if ( !Feature.EXTRACT_DEVELOCITY_BUILD_SCANS.isEnabled( repositoryConfig ) ) {
+			return;
+		}
 		var repository = payload.getRepository();
 		var checkRun = payload.getCheckRun();
 		if ( !DEVELOCITY_CHECK_RUN_NAME.equals( checkRun.getName() ) ) {
@@ -84,6 +88,9 @@ public class ExtractDevelocityBuildScans {
 
 	void checkSuiteRerequested(@CheckSuite.Rerequested GHEventPayload.CheckSuite payload,
 			@ConfigFile("hibernate-github-bot.yml") RepositoryConfig repositoryConfig) {
+		if ( !Feature.EXTRACT_DEVELOCITY_BUILD_SCANS.isEnabled( repositoryConfig ) ) {
+			return;
+		}
 		if ( repositoryConfig == null
 				|| repositoryConfig.develocity == null
 				|| repositoryConfig.develocity.buildScan == null ) {
@@ -100,6 +107,9 @@ public class ExtractDevelocityBuildScans {
 
 	void workflowRunCompleted(@WorkflowRun.Completed GHEventPayload.WorkflowRun payload,
 			@ConfigFile("hibernate-github-bot.yml") RepositoryConfig repositoryConfig) {
+		if ( !Feature.EXTRACT_DEVELOCITY_BUILD_SCANS.isEnabled( repositoryConfig ) ) {
+			return;
+		}
 		if ( repositoryConfig == null
 				|| repositoryConfig.develocity == null
 				|| repositoryConfig.develocity.buildScan == null ) {
@@ -116,6 +126,9 @@ public class ExtractDevelocityBuildScans {
 
 	void checkRunCompleted(@CheckRun.Completed GHEventPayload.CheckRun payload,
 			@ConfigFile("hibernate-github-bot.yml") RepositoryConfig repositoryConfig) {
+		if ( !Feature.EXTRACT_DEVELOCITY_BUILD_SCANS.isEnabled( repositoryConfig ) ) {
+			return;
+		}
 		if ( repositoryConfig == null
 				|| repositoryConfig.develocity == null
 				|| repositoryConfig.develocity.buildScan == null ) {

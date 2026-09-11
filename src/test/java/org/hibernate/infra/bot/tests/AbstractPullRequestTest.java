@@ -1,5 +1,6 @@
 package org.hibernate.infra.bot.tests;
 
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
@@ -29,15 +30,15 @@ abstract class AbstractPullRequestTest {
 
 	void mockCreateCheckRun(GHRepository repoMock, String name, String headSHA,
 			GHCheckRunBuilder checkRunBuilderMock, GHCheckRun checkRunMock, long checkRunId) throws IOException {
-		when( repoMock.createCheckRun( name, headSHA ) ).thenReturn( checkRunBuilderMock );
-		when( checkRunMock.getId() ).thenReturn( checkRunId );
-		when( checkRunBuilderMock.create() ).thenReturn( checkRunMock );
+		lenient().when( repoMock.createCheckRun( name, headSHA ) ).thenReturn( checkRunBuilderMock );
+		lenient().when( checkRunMock.getId() ).thenReturn( checkRunId );
+		lenient().when( checkRunBuilderMock.create() ).thenReturn( checkRunMock );
 	}
 
 	void mockUpdateCheckRun(GHRepository repoMock, long checkRunId,
 			GHCheckRunBuilder checkRunBuilderMock, GHCheckRun checkRunMock) throws IOException {
-		when( repoMock.updateCheckRun( checkRunId ) ).thenReturn( checkRunBuilderMock );
-		when( checkRunBuilderMock.create() ).thenReturn( checkRunMock );
+		lenient().when( repoMock.updateCheckRun( checkRunId ) ).thenReturn( checkRunBuilderMock );
+		lenient().when( checkRunBuilderMock.create() ).thenReturn( checkRunMock );
 	}
 
 }

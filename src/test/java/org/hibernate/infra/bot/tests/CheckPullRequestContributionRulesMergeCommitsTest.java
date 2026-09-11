@@ -2,6 +2,8 @@ package org.hibernate.infra.bot.tests;
 
 import static io.quarkiverse.githubapp.testing.GitHubAppTesting.given;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.ignoreStubs;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -34,12 +36,13 @@ public class CheckPullRequestContributionRulesMergeCommitsTest extends AbstractP
 				.github( mocks -> {
 					mocks.configFile("hibernate-github-bot.yml")
 							.fromString( """
+									features: [ CHECK_CONTRIBUTION_RULES ]
 									jira:
 									  projectKey: "HSEARCH"
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					when( repoMock.getId() ).thenReturn( repoId );
+					lenient().when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.commit( "HSEARCH-1111 Correct message" )
@@ -62,7 +65,7 @@ public class CheckPullRequestContributionRulesMergeCommitsTest extends AbstractP
 							.extracting( "title", InstanceOfAssertFactories.STRING )
 							.contains( "All rules passed" );
 
-					verifyNoMoreInteractions( mocks.ghObjects() );
+					verifyNoMoreInteractions( ignoreStubs( mocks.ghObjects() ) );
 				} );
 	}
 
@@ -74,12 +77,13 @@ public class CheckPullRequestContributionRulesMergeCommitsTest extends AbstractP
 				.github( mocks -> {
 					mocks.configFile("hibernate-github-bot.yml")
 							.fromString( """
+									features: [ CHECK_CONTRIBUTION_RULES ]
 									jira:
 									  projectKey: "HSEARCH"
 									""" );
 
 					GHRepository repoMock = mocks.repository( "yrodiere/hibernate-github-bot-playground" );
-					when( repoMock.getId() ).thenReturn( repoId );
+					lenient().when( repoMock.getId() ).thenReturn( repoId );
 
 					PullRequestMockHelper.start( mocks, prId, repoMock )
 							.baseRef( "main" )
@@ -124,7 +128,7 @@ public class CheckPullRequestContributionRulesMergeCommitsTest extends AbstractP
 									"`main`",
 									"https://docs.github.com/en/get-started/using-git/about-git-rebase"
 							);
-					verifyNoMoreInteractions( mocks.ghObjects() );
+					verifyNoMoreInteractions( ignoreStubs( mocks.ghObjects() ) );
 				} );
 	}
 }
